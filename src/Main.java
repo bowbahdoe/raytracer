@@ -9,6 +9,9 @@ void main() {
     IO.print("\n255\n");
 
     for (int j = 0; j < image_height; j++) {
+        System.err.print("\rScanlines remaining: ");
+        System.err.print((image_height - j));
+        System.err.print(" ");
         for (int i = 0; i < image_width; i++) {
             var r = ((double) i) / (image_width - 1);
             var g = ((double) j) / (image_height - 1);
@@ -26,4 +29,6 @@ void main() {
             IO.print("\n");
         }
     }
+
+    System.err.print("\rDone.                 \n");
 }
