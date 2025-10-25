@@ -11,7 +11,7 @@ void main() {
     for (int j = 0; j < image_height; j++) {
         for (int i = 0; i < image_width; i++) {
             var r = ((double) i) / (image_width - 1);
-            var g = ((double) i) / (image_height - 1);
+            var g = ((double) j) / (image_height - 1);
             var b = 0.0;
 
             int ir = (int) (255.999 * r);
