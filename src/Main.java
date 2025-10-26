@@ -124,11 +124,33 @@ value record HitRecord(
     }
 }
 
+value record Interval(
+        double min, double max
+) {
+    Interval() {
+        this(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
+    }
+
+    double size() {
+        return max - min;
+    }
+
+    boolean contains(double x) {
+        return min <= x && x <= max;
+    }
+
+    boolean surrounds(double x) {
+        return min < x && x < max;
+    }
+
+    static final Interval EMPTY = new Interval(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
+    static final Interval UNIVERSE = new Interval(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+}
+
 interface Hittable {
     Optional<HitRecord> hit(
             Ray r,
-            double rayTMin,
-            double rayTMax
+            Interval rayT
     );
 }
 
@@ -139,8 +161,7 @@ value record Sphere(
     @Override
     public Optional<HitRecord> hit(
             Ray r,
-            double rayTMin,
-            double rayTMax
+            Interval rayT
     ) {
         var oc = center.minus(r.origin);
         var a = r.direction.lengthSquared();
@@ -154,9 +175,9 @@ value record Sphere(
         var sqrtd = Math.sqrt(discriminant);
 
         var root = (h - sqrtd) / a;
-        if (root <= rayTMin || rayTMax <= root) {
+        if (!rayT.surrounds(root)) {
             root = (h + sqrtd) / a;
-            if (root <= rayTMin || rayTMax <= root) {
+            if (!rayT.surrounds(root)) {
                 return Optional.empty();
             }
         }
@@ -194,12 +215,12 @@ static value class HittableList implements Hittable {
     }
 
     @Override
-    public Optional<HitRecord> hit(Ray r, double rayTMin, double rayTMax) {
+    public Optional<HitRecord> hit(Ray r, Interval rayT) {
         Optional<HitRecord> rec = Optional.empty();
-        double closestSoFar = rayTMax;
+        double closestSoFar = rayT.max;
 
         for (var object : objects) {
-            var hit = object.hit(r, rayTMin, closestSoFar)
+            var hit = object.hit(r, new Interval(rayT.min, closestSoFar))
                     .orElse(null);
             if (hit != null) {
                 closestSoFar = hit.t;
@@ -234,7 +255,7 @@ double hitSphere(
 }
 
 @Color Vec3 rayColor(Ray r, Hittable world) {
-    var rec = world.hit(r, 0, Double.POSITIVE_INFINITY)
+    var rec = world.hit(r, new Interval(0, Double.POSITIVE_INFINITY))
             .orElse(null);
     if (rec != null) {
         return rec.normal.plus(new Vec3(1, 1, 1)).multiply(0.5);
