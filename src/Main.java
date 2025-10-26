@@ -181,6 +181,7 @@ static value class HittableList implements Hittable {
     HittableList() {}
 
     HittableList(Hittable object) {
+        super();
         add(object);
     }
 
@@ -210,6 +211,10 @@ static value class HittableList implements Hittable {
     }
 }
 
+double degreesToRadians(double degrees) {
+    return degrees * Math.PI / 180.0;
+}
+
 double hitSphere(
         @Point Vec3 center,
         double radius,
@@ -228,11 +233,11 @@ double hitSphere(
     }
 }
 
-@Color Vec3 rayColor(Ray r) {
-    var t = hitSphere(new Vec3(0, 0, -1), 0.5, r);
-    if (t > 0.0) {
-        var N = r.at(t).minus(new Vec3(0, 0, -1)).unitVector();
-        return new Vec3(N.x + 1, N.y + 1, N.z + 1).multiply(0.5);
+@Color Vec3 rayColor(Ray r, Hittable world) {
+    var rec = world.hit(r, 0, Double.POSITIVE_INFINITY)
+            .orElse(null);
+    if (rec != null) {
+        return rec.normal.plus(new Vec3(1, 1, 1)).multiply(0.5);
     }
 
     var unitDirection = r.direction().unitVector();
@@ -250,6 +255,17 @@ void main() {
     // Calculate the image height, and ensure that it's at least 1.
     int imageHeight = (int) (imageWidth / aspectRatio);
     imageHeight = Math.max(imageHeight, 1);
+
+    // World
+    var world = new HittableList();
+    world.add(new Sphere(
+            new Vec3(0, 0, -1),
+            0.5
+    ));
+    world.add(new Sphere(
+            new Vec3(0, -100.5, -1),
+            100
+    ));
 
     // Camera
     var focalLength = 1.0;
@@ -292,7 +308,7 @@ void main() {
             var rayDirection = pixelCenter.minus(cameraCenter);
             var r = new Ray(cameraCenter, rayDirection);
 
-            @Color Vec3 pixelColor = rayColor(r);
+            @Color Vec3 pixelColor = rayColor(r, world);
 
             writeColor(System.out, pixelColor);
         }
