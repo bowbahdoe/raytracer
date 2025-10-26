@@ -101,6 +101,60 @@ value record Ray(
     }
 }
 
+value record HitRecord(
+        @Point Vec3 p,
+        Vec3 normal,
+        double t
+) {}
+
+interface Hittable {
+    Optional<HitRecord> hit(
+            Ray r,
+            double rayTMin,
+            double rayTMax
+    );
+}
+
+value record Sphere(
+        @Point Vec3 center,
+        double radius
+) implements Hittable {
+    @Override
+    public Optional<HitRecord> hit(
+            Ray r,
+            double rayTMin,
+            double rayTMax
+    ) {
+        var oc = center.minus(r.origin);
+        var a = r.direction.lengthSquared();
+        var h = r.direction.dotProduct(oc);
+        var c = oc.lengthSquared() - radius * radius;
+        var discriminant = h * h - a * c;
+        if (discriminant < 0) {
+            return Optional.empty();
+        }
+
+        var sqrtd = Math.sqrt(discriminant);
+
+        var root = (h - sqrtd) / a;
+        if (root <= rayTMin || rayTMax <= root) {
+            root = (h + sqrtd) / a;
+            if (root <= rayTMin || rayTMax <= root) {
+                return Optional.empty();
+            }
+        }
+
+        var t = root;
+        var p = r.at(t);
+        var normal = (p.minus(center)).divide(radius);
+        return Optional.of(new HitRecord(
+                p,
+                normal,
+                t
+        ));
+    }
+}
+
 double hitSphere(
         @Point Vec3 center,
         double radius,
