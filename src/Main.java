@@ -1,5 +1,8 @@
-@interface Color {}
-@interface Point {}
+@interface Color {
+}
+
+@interface Point {
+}
 
 value record Vec3(
         double x,
@@ -59,6 +62,26 @@ value record Vec3(
     }
 }
 
+void writeColor(
+        PrintStream out,
+        @Color Vec3 pixelColor
+) {
+    var r = pixelColor.x;
+    var g = pixelColor.y;
+    var b = pixelColor.z;
+
+    int rByte = (int) (255.999 * r);
+    int gByte = (int) (255.999 * g);
+    int bByte = (int) (255.999 * b);
+
+    out.print(rByte);
+    out.print(" ");
+    out.print(gByte);
+    out.print(" ");
+    out.print(bByte);
+    out.print("\n");
+}
+
 void main() {
     int image_width = 256;
     int image_height = 256;
@@ -74,20 +97,13 @@ void main() {
         System.err.print((image_height - j));
         System.err.print(" ");
         for (int i = 0; i < image_width; i++) {
-            var r = ((double) i) / (image_width - 1);
-            var g = ((double) j) / (image_height - 1);
-            var b = 0.0;
+            @Color Vec3 pixelColor = new Vec3(
+                    ((double) i) / (image_width - 1),
+                    ((double) j) / (image_height - 1),
+                    0.0
+            );
 
-            int ir = (int) (255.999 * r);
-            int ig = (int) (255.999 * g);
-            int ib = (int) (255.999 * b);
-
-            IO.print(ir);
-            IO.print(" ");
-            IO.print(ig);
-            IO.print(" ");
-            IO.print(ib);
-            IO.print("\n");
+            writeColor(System.out, pixelColor);
         }
     }
 

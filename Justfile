@@ -1,2 +1,2 @@
 run:
-    java src/Main.java > image.ppm
+    java --enable-preview src/Main.java > image.ppm
