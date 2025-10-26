@@ -97,7 +97,7 @@ value record Ray(
     }
 }
 
-boolean hitSphere(
+double hitSphere(
         @Point Vec3 center,
         double radius,
         Ray r
@@ -107,12 +107,19 @@ boolean hitSphere(
     var b = -2.0 * r.direction.dotProduct(oc);
     var c = oc.dotProduct(oc) - radius * radius;
     var discriminant = b * b - 4 * a * c;
-    return discriminant >= 0;
+    if (discriminant < 0) {
+        return -1;
+    }
+    else {
+        return (-b - Math.sqrt(discriminant)) / (2 * a);
+    }
 }
 
 @Color Vec3 rayColor(Ray r) {
-    if (hitSphere(new Vec3(0, 0, -1), 0.5, r)) {
-        return new Vec3(1, 0, 0);
+    var t = hitSphere(new Vec3(0, 0, -1), 0.5, r);
+    if (t > 0.0) {
+        var N = r.at(t).minus(new Vec3(0, 0, -1)).unitVector();
+        return new Vec3(N.x + 1, N.y + 1, N.z + 1).multiply(0.5);
     }
 
     var unitDirection = r.direction().unitVector();
