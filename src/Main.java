@@ -104,8 +104,25 @@ value record Ray(
 value record HitRecord(
         @Point Vec3 p,
         Vec3 normal,
-        double t
-) {}
+        double t,
+        boolean frontFace
+) {
+    HitRecord withFaceNormal(
+            Ray r,
+            Vec3 outwardNormal
+    ) {
+        // Sets the hit record normal vector.
+        // NOTE: the parameter `outward_normal` is assumed to have unit length.
+        var frontFace = r.direction.dotProduct(outwardNormal) < 0;
+        var normal = frontFace ? outwardNormal : outwardNormal.multiply(-1);
+        return new HitRecord(
+                p,
+                normal,
+                t,
+                frontFace
+        );
+    }
+}
 
 interface Hittable {
     Optional<HitRecord> hit(
@@ -147,11 +164,49 @@ value record Sphere(
         var t = root;
         var p = r.at(t);
         var normal = (p.minus(center)).divide(radius);
+        var outwardNormal = p.minus(center).divide(radius);
         return Optional.of(new HitRecord(
                 p,
                 normal,
-                t
-        ));
+                t,
+                false
+        ).withFaceNormal(r, outwardNormal));
+    }
+}
+
+static value class HittableList implements Hittable {
+    private final ArrayList<Hittable> objects
+            = new ArrayList<>();
+
+    HittableList() {}
+
+    HittableList(Hittable object) {
+        add(object);
+    }
+
+    void clear() {
+        objects.clear();
+    }
+
+    void add(Hittable object) {
+        objects.add(object);
+    }
+
+    @Override
+    public Optional<HitRecord> hit(Ray r, double rayTMin, double rayTMax) {
+        Optional<HitRecord> rec = Optional.empty();
+        double closestSoFar = rayTMax;
+
+        for (var object : objects) {
+            var hit = object.hit(r, rayTMin, closestSoFar)
+                    .orElse(null);
+            if (hit != null) {
+                closestSoFar = hit.t;
+                rec = Optional.of(hit);
+            }
+        }
+
+        return rec;
     }
 }
 
