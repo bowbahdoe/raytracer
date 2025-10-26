@@ -48,7 +48,11 @@ value record Vec3(
     }
 
     double length() {
-        return Math.sqrt(x * x + y * y + z * z);
+        return Math.sqrt(lengthSquared());
+    }
+
+    double lengthSquared() {
+        return x * x + y * y + z * z;
     }
 
     double dotProduct(Vec3 v) {
@@ -103,15 +107,15 @@ double hitSphere(
         Ray r
 ) {
     var oc = center.minus(r.origin);
-    var a = r.direction.dotProduct(r.direction);
-    var b = -2.0 * r.direction.dotProduct(oc);
-    var c = oc.dotProduct(oc) - radius * radius;
-    var discriminant = b * b - 4 * a * c;
+    var a = r.direction.lengthSquared();
+    var h = r.direction.dotProduct(oc);
+    var c = oc.lengthSquared() - radius * radius;
+    var discriminant = h * h - a * c;
     if (discriminant < 0) {
         return -1;
     }
     else {
-        return (-b - Math.sqrt(discriminant)) / (2 * a);
+        return (h - Math.sqrt(discriminant)) / a;
     }
 }
 
