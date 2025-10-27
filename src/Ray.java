@@ -1,4 +1,4 @@
-record Ray(
+value record Ray(
         @Point Vec3 origin,
         Vec3 direction
 ) {

@@ -1,6 +1,6 @@
 import java.util.Optional;
 
-record Sphere(
+value record Sphere(
         @Point Vec3 center,
         double radius,
         Material material

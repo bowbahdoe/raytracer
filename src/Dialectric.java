@@ -1,6 +1,6 @@
 import java.util.Optional;
 
-class Dialectric implements Material {
+value class Dialectric implements Material {
     private double refractionIndex;
 
     Dialectric(double refractionIndex) {

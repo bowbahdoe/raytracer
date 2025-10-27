@@ -1,4 +1,4 @@
-record Vec3(
+value record Vec3(
         double x,
         double y,
         double z
