@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Optional;
 
-value class HittableList implements Hittable {
+class HittableList implements Hittable {
     private final ArrayList<Hittable> objects
             = new ArrayList<>();
 

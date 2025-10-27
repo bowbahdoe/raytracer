@@ -1,6 +1,6 @@
 import java.util.Optional;
 
-value class Metal implements Material {
+class Metal implements Material {
     @Color Vec3 albedo;
     double fuzz;
 

@@ -1,4 +1,4 @@
-value record ScatteredRay(
+record ScatteredRay(
         @Color Vec3 attenuation,
         Ray scattered
 ) {
