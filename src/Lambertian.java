@@ -1,6 +1,6 @@
 import java.util.Optional;
 
-value class Lambertian implements Material {
+class Lambertian implements Material {
     @Color Vec3 albedo;
 
     Lambertian(@Color Vec3 albedo) {

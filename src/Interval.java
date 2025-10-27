@@ -1,4 +1,4 @@
-value record Interval(
+record Interval(
         double min, double max
 ) {
     Interval() {
