@@ -5,11 +5,11 @@ double randomDouble(double min, double max) {
 
 void main() {
     // World
-    var world = new HittableList();
+    var spheres = new ArrayList<Sphere>();
 
 
     var groundMaterial = new Lambertian(new Vec3(0.5, 0.5, 0.5));
-    world.add(new Sphere(new Vec3(0,-1000,0), 1000, groundMaterial));
+    spheres.add(new Sphere(new Vec3(0,-1000,0), 1000, groundMaterial));
 
     for (int a = -16; a < 16; a++) {
         for (int b = -11; b < 11; b++) {
@@ -23,31 +23,33 @@ void main() {
                     // diffuse
                     var albedo = Vec3.random().multiply(Vec3.random());
                     sphereMaterial = new Lambertian(albedo);
-                    world.add(new Sphere(center, 0.2, sphereMaterial));
+                    spheres.add(new Sphere(center, 0.2, sphereMaterial));
                 } else if (choose_mat < 0.7) {
                     // metal
                     var albedo = Vec3.random(0.5, 1);
                     var fuzz = randomDouble(0, 0.5);
                     sphereMaterial = new Metal(albedo, fuzz);
-                    world.add(new Sphere(center, 0.2, sphereMaterial));
+                    spheres.add(new Sphere(center, 0.2, sphereMaterial));
                 } else {
                     // glass
                     sphereMaterial = new Dialectric(1.5);
-                    world.add(new Sphere(center, 0.2, sphereMaterial));
+                    spheres.add(new Sphere(center, 0.2, sphereMaterial));
                 }
             }
         }
     }
 
     var material1 = new Dialectric(1.5);
-    world.add(new Sphere(new Vec3(0, 1, 0), 1.0, material1));
+    spheres.add(new Sphere(new Vec3(0, 1, 0), 1.0, material1));
 
     var material2 = new Lambertian(new Vec3(0.4, 0.2, 0.1));
-    world.add(new Sphere(new Vec3(-4, 1, 0), 1.0, material2));
+    spheres.add(new Sphere(new Vec3(-4, 1, 0), 1.0, material2));
 
     var material3 = new Metal(new Vec3(0.7, 0.6, 0.5), 0.0);
-    world.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));
+    spheres.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));
 
+
+    var world = new SphereList(spheres.toArray(Sphere[]::new));
 
     var camera = new Camera();
     camera.aspectRatio      = 16.0 / 9.0;
