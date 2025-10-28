@@ -11,7 +11,7 @@ void main() {
     var groundMaterial = new Lambertian(new Vec3(0.5, 0.5, 0.5));
     world.add(new Sphere(new Vec3(0,-1000,0), 1000, groundMaterial));
 
-    for (int a = -11; a < 11; a++) {
+    for (int a = -16; a < 16; a++) {
         for (int b = -11; b < 11; b++) {
             var choose_mat = Math.random();
             var center = new Vec3(a + 0.9*Math.random(), 0.2, b + 0.9*Math.random());
@@ -19,12 +19,12 @@ void main() {
             if ((center.minus(new Vec3(4, 0.2, 0))).length() > 0.9) {
                 Material sphereMaterial;
 
-                if (choose_mat < 0.8) {
+                if (choose_mat < 0.3) {
                     // diffuse
                     var albedo = Vec3.random().multiply(Vec3.random());
                     sphereMaterial = new Lambertian(albedo);
                     world.add(new Sphere(center, 0.2, sphereMaterial));
-                } else if (choose_mat < 0.95) {
+                } else if (choose_mat < 0.7) {
                     // metal
                     var albedo = Vec3.random(0.5, 1);
                     var fuzz = randomDouble(0, 0.5);
@@ -55,7 +55,7 @@ void main() {
     camera.samplesPerPixel = 500;
     camera.maxDepth         = 50;
 
-    camera.vfov     = 20;
+    camera.vfov     = 120;
     camera.lookFrom = new Vec3(13,2,3);
     camera.lookAt   = new Vec3(0,0,0);
     camera.vup      = new Vec3(0,1,0);

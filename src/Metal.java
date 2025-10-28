@@ -10,19 +10,19 @@ value class Metal implements Material {
     }
 
     @Override
-    public Optional<ScatteredRay> scatter(Ray r_in, HitRecord rec) {
+    public ScatteredRay scatter(Ray r_in, HitRecord rec) {
         var reflected = Vec3.reflect(r_in.direction(), rec.normal());
         reflected = reflected.unitVector().plus(Vec3.randomUnitVector().multiply(fuzz));
         var scattered = new Ray(rec.p(), reflected);
 
         if (scattered.direction().dotProduct(rec.normal()) > 0) {
-            return Optional.of(new ScatteredRay(
+            return new ScatteredRay(
                     albedo,
                     scattered
-            ));
+            );
         }
         else {
-            return Optional.empty();
+            return null;
         }
 
     }

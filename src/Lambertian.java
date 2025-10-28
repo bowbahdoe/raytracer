@@ -8,15 +8,15 @@ value class Lambertian implements Material {
     }
 
     @Override
-    public Optional<ScatteredRay> scatter(Ray r_in, HitRecord rec) {
+    public ScatteredRay scatter(Ray r_in, HitRecord rec) {
         var scatterDirection = rec.normal().plus(Vec3.randomUnitVector());
 
         if (scatterDirection.nearZero()) {
             scatterDirection = rec.normal();
         }
-        return Optional.of(new ScatteredRay(
+        return new ScatteredRay(
                 albedo,
                 new Ray(rec.p(), scatterDirection)
-        ));
+        );
     }
 }

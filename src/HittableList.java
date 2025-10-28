@@ -21,16 +21,15 @@ value class HittableList implements Hittable {
     }
 
     @Override
-    public Optional<HitRecord> hit(Ray r, Interval rayT) {
-        Optional<HitRecord> rec = Optional.empty();
+    public HitRecord hit(Ray r, Interval rayT) {
+        HitRecord rec = null;
         double closestSoFar = rayT.max();
 
         for (var object : objects) {
-            var hit = object.hit(r, new Interval(rayT.min(), closestSoFar))
-                    .orElse(null);
+            var hit = object.hit(r, new Interval(rayT.min(), closestSoFar));
             if (hit != null) {
                 closestSoFar = hit.t();
-                rec = Optional.of(hit);
+                rec = hit;
             }
         }
 

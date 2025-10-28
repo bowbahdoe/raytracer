@@ -1,7 +1,7 @@
 import java.util.Optional;
 
 interface Hittable {
-    Optional<HitRecord> hit(
+    HitRecord hit(
             Ray r,
             Interval rayT
     );

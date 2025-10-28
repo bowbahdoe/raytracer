@@ -8,7 +8,7 @@ value class Dialectric implements Material {
     }
 
     @Override
-    public Optional<ScatteredRay> scatter(Ray r_in, HitRecord rec) {
+    public ScatteredRay scatter(Ray r_in, HitRecord rec) {
         var attenuation = new Vec3(1.0, 1.0, 1.0);
         double ri = rec.frontFace() ? (1.0/refractionIndex) : refractionIndex;
 
@@ -26,10 +26,10 @@ value class Dialectric implements Material {
             direction = Vec3.refract(unit_direction, rec.normal(), ri);
 
         var scattered = new Ray(rec.p(), direction);
-        return Optional.of(new ScatteredRay(
+        return new ScatteredRay(
                 attenuation,
                 scattered
-        ));
+        );
     }
 
     private static double reflectance(double cosine, double refraction_index) {

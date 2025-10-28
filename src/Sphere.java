@@ -16,7 +16,7 @@ value record Sphere(
     }
 
     @Override
-    public Optional<HitRecord> hit(
+    public HitRecord hit(
             Ray r,
             Interval rayT
     ) {
@@ -26,7 +26,7 @@ value record Sphere(
         var c = oc.lengthSquared() - radius * radius;
         var discriminant = h * h - a * c;
         if (discriminant < 0) {
-            return Optional.empty();
+            return null;
         }
 
         var sqrtd = Math.sqrt(discriminant);
@@ -35,7 +35,7 @@ value record Sphere(
         if (!rayT.surrounds(root)) {
             root = (h + sqrtd) / a;
             if (!rayT.surrounds(root)) {
-                return Optional.empty();
+                return null;
             }
         }
 
@@ -43,12 +43,12 @@ value record Sphere(
         var p = r.at(t);
         var normal = (p.minus(center)).divide(radius);
         var outwardNormal = p.minus(center).divide(radius);
-        return Optional.of(new HitRecord(
+        return new HitRecord(
                 p,
                 normal,
                 material,
                 t,
                 false
-        ).withFaceNormal(r, outwardNormal));
+        ).withFaceNormal(r, outwardNormal);
     }
 }
