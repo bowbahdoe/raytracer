@@ -53,7 +53,7 @@ void main() {
 
     var camera = new Camera();
     camera.aspectRatio      = 16.0 / 9.0;
-    camera.imageWidth       = 100;
+    camera.imageWidth       = 400;
     camera.samplesPerPixel = 500;
     camera.maxDepth         = 50;
 
