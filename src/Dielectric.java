@@ -1,9 +1,9 @@
 import java.util.Optional;
 
-value class Dialectric implements Material {
+value class Dielectric implements Material {
     private double refractionIndex;
 
-    Dialectric(double refractionIndex) {
+    Dielectric(double refractionIndex) {
         this.refractionIndex = refractionIndex;
     }
 
@@ -24,7 +24,7 @@ value class Dialectric implements Material {
         else
             direction = Vec3.refract(unit_direction, rec.normal(), ri);
 
-        var scattered = new Ray(rec.p(), direction);
+        var scattered = new Ray(rec.p(), direction, r_in.time());
         return Optional.of(new ScatteredRay(
                 attenuation,
                 scattered

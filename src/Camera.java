@@ -106,8 +106,10 @@ public final class Camera {
                 .plus(pixelDeltaV.multiply(j + offset.y()));
         var rayOrigin = (defocusAngle <= 0) ? center : defocusDiskSample();;
         var rayDirection = pixelSample.minus(rayOrigin);
+        var rayTime = Math.random();
 
-        return new Ray(rayOrigin, rayDirection);
+
+        return new Ray(rayOrigin, rayDirection, rayTime);
     }
 
     private @Point Vec3 defocusDiskSample() {
@@ -130,7 +132,7 @@ public final class Camera {
         }
 
 
-        var rec = world.hit(r, new Interval(0.001, Double.POSITIVE_INFINITY))
+        var rec = world.hit(r, new Interval(0.001, Double.POSITIVE_INFINITY), 0)
                 .orElse(null);
         if (rec != null) {
             var scatteredRay = rec.material().scatter(r, rec).orElse(null);

@@ -122,4 +122,13 @@ value record Vec3(
             }
         }
     }
+
+    double get(int index) {
+        return switch (index) {
+            case 0 -> x;
+            case 1 -> y;
+            case 2 -> z;
+            default -> throw new IndexOutOfBoundsException("" + index);
+        };
+    }
 }

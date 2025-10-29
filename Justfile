@@ -1,3 +1,10 @@
+default:
+    @java scripts/Value.java
+    @rm -rf build/classes
+    @javac -Xlint:preview --enable-preview --release 26 src/Main.java --source-path src -d build/classes
+
+    @echo 'Java With Value Classes'
+    @time java --enable-preview --class-path build/classes Main > value_classes.ppm
 run:
     @zig c++ reference/src/InOneWeekend/main.cc
     echo 'Reference C++ implementation (no optimizations)'

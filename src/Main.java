@@ -23,7 +23,8 @@ void main() {
                     // diffuse
                     var albedo = Vec3.random().multiply(Vec3.random());
                     sphereMaterial = new Lambertian(albedo);
-                    world.add(new Sphere(center, 0.2, sphereMaterial));
+                    var center2 = center.plus(new Vec3(0, randomDouble(0,.5), 0));
+                    world.add(new Sphere(center, center2, 0.2, sphereMaterial));
                 } else if (choose_mat < 0.95) {
                     // metal
                     var albedo = Vec3.random(0.5, 1);
@@ -32,14 +33,14 @@ void main() {
                     world.add(new Sphere(center, 0.2, sphereMaterial));
                 } else {
                     // glass
-                    sphereMaterial = new Dialectric(1.5);
+                    sphereMaterial = new Dielectric(1.5);
                     world.add(new Sphere(center, 0.2, sphereMaterial));
                 }
             }
         }
     }
 
-    var material1 = new Dialectric(1.5);
+    var material1 = new Dielectric(1.5);
     world.add(new Sphere(new Vec3(0, 1, 0), 1.0, material1));
 
     var material2 = new Lambertian(new Vec3(0.4, 0.2, 0.1));
@@ -51,8 +52,8 @@ void main() {
 
     var camera = new Camera();
     camera.aspectRatio      = 16.0 / 9.0;
-    camera.imageWidth       = 1200;
-    camera.samplesPerPixel  = 200;
+    camera.imageWidth       = 400;
+    camera.samplesPerPixel  = 100;
     camera.maxDepth         = 20;
 
     camera.vfov     = 20;

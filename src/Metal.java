@@ -13,7 +13,7 @@ value class Metal implements Material {
     public Optional<ScatteredRay> scatter(Ray r_in, HitRecord rec) {
         var reflected = Vec3.reflect(r_in.direction(), rec.normal());
         reflected = reflected.unitVector().plus(Vec3.randomUnitVector().multiply(fuzz));
-        var scattered = new Ray(rec.p(), reflected);
+        var scattered = new Ray(rec.p(), reflected, r_in.time());
 
         if (scattered.direction().dotProduct(rec.normal()) > 0) {
             return Optional.of(new ScatteredRay(

@@ -14,9 +14,11 @@ value class Lambertian implements Material {
         if (scatterDirection.nearZero()) {
             scatterDirection = rec.normal();
         }
+
+
         return Optional.of(new ScatteredRay(
                 albedo,
-                new Ray(rec.p(), scatterDirection)
+                new Ray(rec.p(), scatterDirection, r_in.time())
         ));
     }
 }

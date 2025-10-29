@@ -1,26 +1,65 @@
 import java.util.Optional;
 
 value record Sphere(
-        @Point Vec3 center,
+        Ray center,
         double radius,
-        Material material
+        Material material,
+        @Override AABB boundingBox
 ) implements Hittable {
     Sphere(
-            @Point Vec3 center,
+            Ray center,
             double radius,
-            Material material
+            Material material,
+            AABB boundingBox
     ) {
         this.center = center;
         this.radius = Math.max(0, radius);
         this.material = material;
+        this.boundingBox = boundingBox;
+    }
+
+    Sphere(
+            @Point Vec3 staticCenter,
+            double radius,
+            Material material
+    ) {
+        var rvec = new Vec3(radius, radius, radius);
+        var bbox = new AABB(staticCenter.minus(rvec), staticCenter.plus(rvec));
+        this(
+                new Ray(staticCenter, new Vec3(0, 0, 0)),
+                radius,
+                material,
+                bbox
+        );
+    }
+
+    Sphere(
+            @Point Vec3 center1,
+            @Point Vec3 center2,
+            double radius,
+            Material material
+    ) {
+        var center = new Ray(center1, center2.minus(center1));
+        var rvec = new Vec3(radius, radius, radius);
+        var box1 = new AABB(center.at(0).minus(rvec), center.at(0).plus(rvec));
+        var box2 = new AABB(center.at(1).minus(rvec), center.at(1).plus(rvec));
+        var bbox = new AABB(box1, box2);
+        this(
+                center,
+                radius,
+                material,
+                bbox
+        );
     }
 
     @Override
     public Optional<HitRecord> hit(
             Ray r,
-            Interval rayT
+            Interval rayT,
+            double time
     ) {
-        var oc = center.minus(r.origin());
+        var currentCenter = center.at(r.time());
+        var oc = currentCenter.minus(r.origin());
         var a = r.direction().lengthSquared();
         var h = r.direction().dotProduct(oc);
         var c = oc.lengthSquared() - radius * radius;
@@ -41,11 +80,10 @@ value record Sphere(
 
         var t = root;
         var p = r.at(t);
-        var normal = (p.minus(center)).divide(radius);
-        var outwardNormal = p.minus(center).divide(radius);
+        var outwardNormal = p.minus(currentCenter).divide(radius);
         return Optional.of(new HitRecord(
                 p,
-                normal,
+                outwardNormal,
                 material,
                 t,
                 false

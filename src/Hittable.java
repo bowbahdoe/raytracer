@@ -3,6 +3,9 @@ import java.util.Optional;
 interface Hittable {
     Optional<HitRecord> hit(
             Ray r,
-            Interval rayT
+            Interval rayT,
+            double time
     );
+
+    AABB boundingBox();
 }

@@ -1,9 +1,10 @@
 import java.util.ArrayList;
 import java.util.Optional;
 
-value class HittableList implements Hittable {
-    private final ArrayList<Hittable> objects
+final class HittableList implements Hittable {
+    final ArrayList<Hittable> objects
             = new ArrayList<>();
+    private AABB boundingBox;
 
     HittableList() {}
 
@@ -18,6 +19,7 @@ value class HittableList implements Hittable {
 
     void add(Hittable object) {
         objects.add(object);
+        boundingBox = new AABB(boundingBox, object.boundingBox());
     }
 
     @Override
@@ -35,6 +37,11 @@ value class HittableList implements Hittable {
         }
 
         return rec;
+    }
+
+    @Override
+    public AABB boundingBox() {
+        return boundingBox;
     }
 
     @Override
