@@ -1,5 +1,4 @@
 public final class Camera {
-
     double aspectRatio = 1.0;
     int imageWidth = 100;
     int samplesPerPixel = 10;
